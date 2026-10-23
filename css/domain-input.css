@@ -1,0 +1,45 @@
+/* Separate domain and extension inputs */
+.domain-input-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.domain-input-group input:not([type="checkbox"]) {
+  width: auto;
+  min-width: 0;
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#domain {
+  flex: 2 !important;
+}
+
+#extension-dot {
+  padding-top: 12px;
+  color: #9ca3af;
+  font-size: 20px;
+}
+
+#extension-input {
+  max-width: 130px;
+  flex: 1 !important;
+}
+
+#extension-input.invalid {
+  border-color: #f87171 !important;
+  color: #f87171;
+  box-shadow: 0 0 0 1px #f87171;
+}
+
+#extension-input.valid {
+  border-color: #4ade80;
+}
+
+.extension-error {
+  margin: -12px 0 18px;
+  color: #f87171;
+  font-size: 12px;
+}

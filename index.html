@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>Domain Checker</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/character-controls.css">
+  <link rel="stylesheet" href="css/results.css">
+  <link rel="stylesheet" href="css/domain-input.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <script src="js/domain-checker.js" defer></script>
+  <script src="js/timer.js" defer></script>
+  <script src="js/speed-control.js" defer></script>
+  <script src="js/results.js" defer></script>
+  <script src="js/copy-unverified.js" defer></script>
+  <script src="js/script.js" defer></script>
+  <script src="js/scanner-core.js" defer></script>
+  <script src="js/scanner-combinations.js" defer></script>
+  <script src="js/scanner-ui.js" defer></script>
+  <script src="js/scanner-runner.js" defer></script>
+  <script src="js/scanner-init.js" defer></script>
+  <script src="js/character-extension.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1>Domain<span>Checker</span></h1>
+    <p class="subtitle">Check domain registration status.</p>
+
+    <section class="search-box">
+      <label for="domain">Domain name / Starting domain</label>
+      <div class="domain-input-group" id="domain-input-group">
+        <input id="domain" placeholder="example"
+          autocomplete="off" autocapitalize="off" spellcheck="false">
+        <span id="extension-dot" hidden>.</span>
+        <input id="extension-input"
+          placeholder="com"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Domain extension"
+          hidden>
+      </div>
+
+      <p id="extension-error" class="extension-error" role="alert" hidden>
+        Invalid extension.
+      </p>
+
+      <label>Choose character positions to replace</label>
+      <div id="character-selector" class="character-selector">
+        <p class="selector-hint">Enter a domain name to select characters.</p>
+      </div>
+
+      <div class="scan-controls">
+        <label class="scan-option">
+          <input type="checkbox" id="include-letters" checked> a–z
+        </label>
+        <label class="scan-option">
+          <input type="checkbox" id="include-numbers"> 0–9
+        </label>
+        <button id="scan-button" type="button" disabled>Auto Check 0</button>
+      </div>
+
+      <div class="scan-action-buttons">
+        <button id="pause-button" type="button" disabled>⏸ Pause</button>
+        <button id="play-button" type="button" disabled>▶ Play</button>
+        <button id="reset-button" type="button" disabled>↻ Reset</button>
+      </div>
+
+      <div id="scan-progress" class="scan-progress" aria-live="polite"></div>
+
+      <div class="speed-section">
+        <span class="control-label">Speed:</span>
+        <div id="speed-controls" class="speed-controls">
+          <button type="button" class="speed-button" data-speed="2" aria-pressed="false">X2</button>
+          <button type="button" class="speed-button" data-speed="6" aria-pressed="false">X6</button>
+          <button type="button" class="speed-button" data-speed="8" aria-pressed="false">X8</button>
+          <button type="button" class="speed-button" data-speed="10" aria-pressed="false">X10</button>
+          <button type="button" class="speed-button" data-speed="20" aria-pressed="false">X20</button>
+        </div>
+        <p class="small-hint">Click the selected speed again to return to X1.</p>
+      </div>
+
+      <div class="timing-panel" aria-live="polite">
+        <div><span>Elapsed:</span> <strong id="elapsed-time">00:00:00</strong></div>
+        <div><span>Estimated remaining:</span> <strong id="eta-time">—</strong></div>
+      </div>
+
+      <label for="extension">Domain extension selector</label>
+      <select id="extension">
+        <option value="it">.IT — DNS Check Only</option>
+        <option value="com">.COM — DNS + RDAP Check</option>
+        <option value="in">.IN — DNS + RDAP Check</option>
+        <option value="net">.NET — DNS + RDAP Check</option>
+        <option value="org">.ORG — DNS + RDAP Check</option>
+        <option value="info">.INFO — DNS + RDAP Check</option>
+        <option value="biz">.BIZ — DNS + RDAP Check</option>
+        <option value="eu">.EU — DNS + RDAP Check</option>
+        <option value="io">.IO — DNS + RDAP Check</option>
+        <option value="co">.CO — DNS + RDAP Check</option>
+        <option value="dev">.DEV — DNS + RDAP Check</option>
+        <option value="app">.APP — DNS + RDAP Check</option>
+        <option value="me">.ME — DNS + RDAP Check</option>
+        <option value="xyz">.XYZ — DNS + RDAP Check</option>
+        <option value="online">.ONLINE — DNS + RDAP Check</option>
+        <option value="site">.SITE — DNS + RDAP Check</option>
+        <option value="store">.STORE — DNS + RDAP Check</option>
+        <option value="tech">.TECH — DNS + RDAP Check</option>
+        <option value="uk">.UK — DNS + RDAP Check</option>
+        <option value="de">.DE — DNS + RDAP Check</option>
+        <option value="fr">.FR — DNS + RDAP Check</option>
+      </select>
+
+      <div id="method" class="method">
+        DNS check only. Results are not conclusive.
+      </div>
+
+      <div id="status" class="status muted" role="status" aria-live="polite">
+        Enter a domain name to start checking.
+      </div>
+    </section>
+
+    <section id="scan-results-container" class="scan-results-container"
+      aria-label="Bulk scan results">
+      <div class="sort-controls">
+        <span class="sort-label">Sort:</span>
+        <button type="button" class="sort-button" data-sort="🍀"
+          aria-pressed="false" aria-label="Sort lucky results first">🍀</button>
+        <button type="button" class="sort-button" data-sort="🟡"
+          aria-pressed="false" aria-label="Sort yellow results first">🟡</button>
+        <button type="button" class="sort-button" data-sort="❌"
+          aria-pressed="false" aria-label="Sort red results first">❌</button>
+        <button type="button" class="sort-button" data-sort="⚪"
+          aria-pressed="false" aria-label="Sort unable to verify results first">⚪</button>
+        <button type="button" id="sort-info-button" class="sort-info-button"
+          aria-label="Explain result symbols" aria-expanded="false">(i)</button>
+      </div>
+
+      <div id="sort-info" class="sort-info" hidden>
+        <p>🍀 DNS records not found and RDAP reports no domain record. Availability is not guaranteed.</p>
+        <p>🟡 No DNS records found. This is a DNS-only result for .IT domains.</p>
+        <p>❌ DNS records found or RDAP reports the domain as registered.</p>
+        <p>⚪ Unable to verify — the lookup service may have failed.</p>
+      </div>
+
+      <div id="scan-results" class="scan-results"></div>
+    </section>
+
+    <p class="note">
+      DNS and RDAP results are indicative, not a guarantee of availability.
+      Confirm availability with a domain registrar before purchasing.
+    </p>
+  </main>
+</body>
+</html>
